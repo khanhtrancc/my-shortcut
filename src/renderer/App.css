@@ -1,0 +1,7 @@
+body {
+  margin: 0;
+}
+
+.profile-item td, .profile-item th {
+  padding: 2px;
+}
