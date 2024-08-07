@@ -15,6 +15,7 @@ export function ActionItem({
   index,
   showEdit,
   showRemove,
+  showFull,
   onEdit,
   onRemove,
 }: {
@@ -22,6 +23,7 @@ export function ActionItem({
   index?: number;
   showEdit?: boolean;
   showRemove?: boolean;
+  showFull?: boolean;
   onEdit?: () => void;
   onRemove?: () => void;
 }) {
@@ -40,7 +42,7 @@ export function ActionItem({
         textAlign={'center'}
         alignItems={'center'}
       >
-        <Typography variant="body1" fontWeight={'bold'}>
+        <Typography variant="body1">
           {index ? `${index}-` : ''}
           {action.title}{' '}
           <span style={{ fontSize: '10px' }}>({action.type})</span>
@@ -77,14 +79,16 @@ export function ActionItem({
         )}
       </Stack>
 
-      <TextField
-        multiline
-        maxRows={5}
-        value={action.value}
-        fullWidth
-        size="small"
-        disabled
-      />
+      {showFull && (
+        <TextField
+          multiline
+          maxRows={5}
+          value={action.value}
+          fullWidth
+          size="small"
+          disabled
+        />
+      )}
     </Stack>
   );
 }

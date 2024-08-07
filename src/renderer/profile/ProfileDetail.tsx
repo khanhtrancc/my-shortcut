@@ -8,6 +8,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Divider,
+  IconButton,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
@@ -19,6 +20,7 @@ import { RootState } from '../redux/store';
 import { profileAction } from '../redux/profile';
 import { ProfileAction, ProfileActionType } from '../../models/profile';
 import { ActionItem } from '../components/ActionItem';
+import { Edit } from '@mui/icons-material';
 
 export function ProfileDetail() {
   const dispatch = useDispatch();
@@ -30,6 +32,8 @@ export function ProfileDetail() {
 
   useEffect(() => {
     if (!profile || !profile.seriesActions) {
+      setSeriesRecords([]);
+      setSeriesRecordIndex(0);
       return;
     }
 
@@ -58,6 +62,8 @@ export function ProfileDetail() {
 
     const rows = profile.seriesActions.split(rowRegex);
     if (rows.length < 2) {
+      setSeriesRecords([]);
+      setSeriesRecordIndex(0);
       return;
     }
     const headers = rows[0].split(colRegex);
@@ -104,81 +110,135 @@ export function ProfileDetail() {
 
   return (
     <Stack spacing={2}>
-      <Typography
-        variant="h5"
-        color={appColor.primary.primaryText}
-        textAlign={'center'}
+      <Stack
+        direction={'row'}
+        spacing={2}
+        alignItems={'center'}
+        justifyContent={'center'}
       >
-        {profile.title}
-      </Typography>
+        <Typography
+          variant="h5"
+          color={appColor.primary.primaryText}
+          textAlign={'center'}
+        >
+          {profile.title}
+        </Typography>
+        <IconButton style={{ marginLeft: 0 }} onClick={() => editProfile()}>
+          <Edit fontSize={'small'} color="disabled" />
+        </IconButton>
+      </Stack>
       <Typography
         variant="body1"
-        color={appColor.primary.primaryText}
+        color={appColor.primary.secondaryText}
         textAlign={'center'}
+        style={{ marginTop: 0, fontSize: '0.9rem' }}
       >
         {profile.description}
       </Typography>
 
-      <Accordion defaultExpanded>
+      <Accordion
+        defaultExpanded
+        sx={{
+          '& .MuiAccordionSummary-content.Mui-expanded': {
+            margin: 0,
+            marginTop: '8px',
+          },
+          '& .MuiAccordionSummary-root.Mui-expanded': { minHeight: 0 },
+        }}
+      >
         <AccordionSummary>
           <Typography fontSize={'1em'} variant="h6">
             Actions
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Stack spacing={2}>
+          <Grid container spacing={1}>
             {profile.actions.map((action, index) => {
               return (
-                <ActionItem key={index} action={action} index={index + 1} />
+                <Grid item key={index} sm={12} md={6}>
+                  <ActionItem action={action} index={index + 1} />
+                </Grid>
               );
             })}
-          </Stack>
+          </Grid>
         </AccordionDetails>
       </Accordion>
 
-      <Accordion defaultExpanded>
-        <AccordionSummary>
-          <Typography fontSize={'1em'} variant="h6">
-            Series Actions
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Stack spacing={2}>
-            <Typography variant="body1" style={{ color: 'green' }}>
-              Current {seriesRecordIndex}/{seriesRecords.length} records
+      {seriesRecords.length > 0 && (
+        <Accordion
+          defaultExpanded
+          sx={{
+            '& .MuiAccordionSummary-content.Mui-expanded': {
+              margin: 0,
+              marginTop: '8px',
+            },
+            '& .MuiAccordionSummary-root.Mui-expanded': { minHeight: 0 },
+          }}
+        >
+          <AccordionSummary>
+            <Typography fontSize={'1em'} variant="h6">
+              Series Actions
             </Typography>
-            {seriesRecords[seriesRecordIndex]?.map((action, index) => {
-              return (
-                <ActionItem key={index} action={action} index={index + 1} />
-              );
-            })}
-          </Stack>
-          <Stack direction={'row'} spacing={2} justifyContent={'center'}>
-            <Button
-              variant="contained"
-              size="small"
-              color="primary"
-              style={{ width: '200px' }}
-              onClick={() => {
-                previousSeriesActions();
-              }}
+            <Typography
+              variant="body1"
+              fontSize={'0.9em'}
+              style={{ color: 'green', marginLeft: '16px' }}
             >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              size="small"
-              color="primary"
-              style={{ width: '200px' }}
-              onClick={() => {
-                nextSeriesActions();
-              }}
+              {seriesRecordIndex + 1}/{seriesRecords.length} records
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid container spacing={1}>
+              {seriesRecords[seriesRecordIndex]?.map((action, index) => {
+                return (
+                  <Grid item sm={12} md={6}>
+                    <ActionItem
+                      key={seriesRecordIndex + '-' + index}
+                      action={action}
+                      showFull
+                      index={index + 1}
+                    />
+                  </Grid>
+                );
+              })}
+            </Grid>
+            <Stack
+              direction={'row'}
+              spacing={2}
+              justifyContent={'center'}
+              marginTop={2}
             >
-              Next
-            </Button>
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
+              {seriesRecordIndex > 0 && (
+                <Button
+                  variant="contained"
+                  size="small"
+                  color="primary"
+                  style={{ width: '200px' }}
+                  onClick={() => {
+                    previousSeriesActions();
+                  }}
+                >
+                  Previous
+                </Button>
+              )}
+
+              {seriesRecordIndex < seriesRecords.length - 1 && (
+                <Button
+                  variant="contained"
+                  size="small"
+                  color="primary"
+                  style={{ width: '200px' }}
+                  onClick={() => {
+                    nextSeriesActions();
+                  }}
+                >
+                  Next
+                </Button>
+              )}
+            </Stack>
+          </AccordionDetails>
+        </Accordion>
+      )}
     </Stack>
   );
 }

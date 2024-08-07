@@ -23,7 +23,11 @@ export function ProfileList() {
   return (
     <Stack direction={'column'}>
       {profiles.length == 0 && (
-        <Typography variant="body1" textAlign={'center'} style={{marginTop: 20}}>
+        <Typography
+          variant="body1"
+          textAlign={'center'}
+          style={{ marginTop: 20 }}
+        >
           No profile
         </Typography>
       )}
@@ -35,23 +39,34 @@ export function ProfileList() {
               sx={{
                 cursor: 'pointer',
                 background: isActive ? appColor.active.dark : undefined,
+                paddingTop: 1,
+                paddingBottom: 1,
+                paddingLeft: 2,
+                paddingRight: 2,
               }}
-              padding={2}
               onClick={() => selectProfile(item)}
             >
-              <Typography variant="h6" textAlign={'start'}>
+              <Typography
+                variant="h6"
+                textAlign={'start'}
+                style={{ marginBottom: 0 }}
+              >
                 <span
                   style={{
                     color:
                       selectedProfile && item.id == selectedProfile.id
-                        ? appColor.active.primaryText
+                        ? appColor.primary.primaryText
                         : undefined,
                   }}
                 >
                   {item.title}
                 </span>
               </Typography>
-              <Typography variant="body1" textAlign={'start'}>
+              <Typography
+                variant="body1"
+                textAlign={'start'}
+                style={{ fontSize: '0.9rem', color: appColor.primary.secondaryText }}
+              >
                 <span style={{}}>{item.description}</span>
               </Typography>
             </Box>

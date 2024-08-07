@@ -153,6 +153,12 @@ export function ProfileForm() {
     });
   };
 
+  const cancel = () => {
+    dispatch(profileAction.updateState({
+      page: 'detail',
+    }));
+  }
+
   let seriesTestActions: ProfileAction[] = [];
   let seriesRecordCount = 0;
   if (form.seriesActions) {
@@ -198,7 +204,7 @@ export function ProfileForm() {
   }
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} paddingBottom={2}>
       <Typography
         variant="h5"
         color={appColor.primary.primaryText}
@@ -248,6 +254,7 @@ export function ProfileForm() {
               return (
                 <ActionItem
                   key={index}
+                  showFull
                   action={action}
                   index={index + 1}
                   showEdit
@@ -369,7 +376,12 @@ export function ProfileForm() {
             </Typography>
             {seriesTestActions.map((action, index) => {
               return (
-                <ActionItem key={index} action={action} index={index + 1} />
+                <ActionItem
+                  showFull
+                  key={index}
+                  action={action}
+                  index={index + 1}
+                />
               );
             })}
 
@@ -553,6 +565,18 @@ export function ProfileForm() {
           }}
         >
           Save
+        </Button>
+
+        <Button
+          variant="contained"
+          size="small"
+          color="error"
+          style={{ width: '200px' }}
+          onClick={() => {
+            cancel();
+          }}
+        >
+          {form.id ? 'Cancel' : 'Back'}
         </Button>
       </Stack>
     </Stack>
