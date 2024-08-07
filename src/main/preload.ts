@@ -1,7 +1,7 @@
 // Disable no-unused-vars, broken for spread args
 /* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-import { Profile } from '../models/profile';
+import { Profile, ProfileAction } from '../models/profile';
 const api = {
   onMessage(callback: (event: IpcRendererEvent, data: any) => void) {
     ipcRenderer.on('new-message', callback);
@@ -17,6 +17,9 @@ const api = {
   createOrUpdateProfile: (profile: Profile) => {
     return ipcRenderer.invoke('create-or-update-profile', { profile });
   },
+  doAction: (action: ProfileAction) => {
+    return ipcRenderer.invoke('do-action', { action });
+  }
 };
 
 export type ApiType = typeof api;

@@ -1,10 +1,16 @@
-import { Profile } from '../../models/profile';
+import {
+  Profile,
+  ProfileAction,
+  ProfileActionType,
+} from '../../models/profile';
 import slug from 'slug';
 import fs from 'fs';
 import { appConfig } from '../config';
 import { logger } from '../common/logger';
 import { appUtils } from '../utils';
 import { ipcSender } from './ipc.sender';
+import { exec } from 'child_process';
+import { clipboard } from 'electron';
 
 let profiles: Profile[] = [];
 
@@ -80,6 +86,31 @@ export const ipcHandler = {
       return profile;
     } catch (err) {
       logger.error('Save profile error', profile, err);
+    }
+  },
+
+  doAction: (action: ProfileAction) => {
+    try {
+      if (action.type === ProfileActionType.Copy) {
+        clipboard.writeText(action.value);
+        ipcSender.sendMessage('success', `Copied ${action.value}`);
+      } else {
+        exec(action.value, (err, stdout, stderr) => {
+          if (err) {
+            logger.info('Run command error', action, err);
+            ipcSender.sendMessage('error', `Run error ${err}`);
+            return;
+          }
+
+          ipcSender.sendMessage('success', `Run success ${action.value}`);
+
+          logger.info('Run command result', action, stdout, stderr);
+        });
+      }
+    } catch (err: any) {
+      logger.error('Do action error', action, err);
+      ipcSender.sendMessage('error', `Error: ${err.message}`);
+      return null;
     }
   },
 };

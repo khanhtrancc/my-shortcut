@@ -27,6 +27,11 @@ export function ActionItem({
   onEdit?: () => void;
   onRemove?: () => void;
 }) {
+
+  const doAction = () => {
+    window.MyShortcutApi.doAction(action);
+  };
+
   return (
     <Stack
       style={{
@@ -47,7 +52,7 @@ export function ActionItem({
           {action.title}{' '}
           <span style={{ fontSize: '10px' }}>({action.type})</span>
         </Typography>
-        <Button variant="outlined" size="small">
+        <Button variant="outlined" size="small" onClick={() => doAction()}>
           {action.button}
         </Button>
 
