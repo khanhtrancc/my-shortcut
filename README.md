@@ -7,7 +7,7 @@ Simple UI for commands
 Start the app in the `dev` environment:
 
 ```bash
-npm start
+yarn start
 ```
 
 ## Packaging for Production
@@ -15,8 +15,12 @@ npm start
 To package apps for the local platform:
 
 ```bash
-npm run package
+yarn package
 ```
+
+## Guide
+
+
 
 ## Docs
 

@@ -6,6 +6,7 @@ import { appColor } from '../common/color';
 import { RootState } from '../redux/store';
 import { Profile } from '../../models/profile';
 import { profileAction } from '../redux/profile';
+import { useEffect } from 'react';
 
 export function ProfileList() {
   const dispatch = useDispatch();
@@ -15,6 +16,12 @@ export function ProfileList() {
   const selectedProfile = useSelector(
     (state: RootState) => state.profile.selectedProfile,
   );
+
+  useEffect(() => {
+    if (profiles.length > 0 && !selectedProfile) {
+      dispatch(profileAction.updateState({ selectedProfile: profiles[0] }));
+    }
+  }, [profiles, selectedProfile]);
 
   const selectProfile = (profile: Profile) => {
     dispatch(profileAction.updateState({ selectedProfile: profile }));
@@ -65,7 +72,10 @@ export function ProfileList() {
               <Typography
                 variant="body1"
                 textAlign={'start'}
-                style={{ fontSize: '0.9rem', color: appColor.primary.secondaryText }}
+                style={{
+                  fontSize: '0.9rem',
+                  color: appColor.primary.secondaryText,
+                }}
               >
                 <span style={{}}>{item.description}</span>
               </Typography>

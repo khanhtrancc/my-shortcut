@@ -25,7 +25,7 @@ const rootFolder = isDev
   ? usingEnv.ROOT_PATH
   : join(
       app.getAppPath(),
-      usingEnv.OS == 'windows' ? '../../../' : '../../../../',
+      usingEnv.OS == 'windows' ? '../../' : '../../../',
     );
 
 const logFolder = join(rootFolder, './logs');
